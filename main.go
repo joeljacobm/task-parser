@@ -8,7 +8,7 @@ import (
 
 func main() {
 	var filePath string
-	flag.StringVar(&filePath, "filePath", "", "the path to the task file")
+	flag.StringVar(&filePath, "filePath", "", "the path to the task file, the path must be an absolute path")
 	flag.Parse()
 	if filePath == "" {
 		log.Fatal("must provide a path to the task file")
