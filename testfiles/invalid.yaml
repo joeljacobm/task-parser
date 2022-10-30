@@ -1,0 +1,5 @@
+- name: Create root directory
+  type: create_dir
+  abortOnFail: true
+  args:
+   - path: /tmp/project

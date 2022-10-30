@@ -1,0 +1,6 @@
+- name: Set VERSION
+  type: put_content
+  args:
+    path: /tmp/project/VERSION
+    content: 1.0.0
+    append: false

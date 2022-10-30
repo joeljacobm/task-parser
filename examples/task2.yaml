@@ -1,0 +1,14 @@
+- name: Create root directory
+  type: create_dir
+  abortOnFail: true
+  args:
+    path: /tmp/project
+- name: Create root directory2
+  type: create_dir
+  abortOnFail: true
+  args:
+    path: /tmp/project
+- name: Create VERSION file
+  type: create_file
+  args:
+    path: /tmp/project/VERSION

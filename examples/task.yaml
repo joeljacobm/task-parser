@@ -1,0 +1,23 @@
+- name: Create root directory
+  type: create_dir
+  abortOnFail: false
+  args:
+   path: /tmp/project
+- name: Create VERSION file
+  type: create_file
+  abortOnFail: false
+  args:
+    path: /tmp/project/VERSION
+- name: Set VERSION
+  type: put_content
+  args:
+    path: /tmp/project/VERSION
+    content: 1.0.0
+    append: false
+  abortOnFail: false
+- name: Clean up
+  type: rm_dir
+  abortOnFail: true
+  args:
+    path: /tmp/project
+    recursive: true
