@@ -34,11 +34,11 @@ func TestValidateAndRunTasks(t *testing.T) {
 		}
 		var tl TasksList
 		tl.Tasks = append(tl.Tasks, task)
-		success, unsuccess, err := tl.validateAndRunTasks()
+		err := tl.validateAndRunTasks()
 		assert.NoError(t, err)
-		assert.Equal(t, 0, len(unsuccess))
-		assert.Equal(t, 1, len(success))
-		assert.Equal(t, "create tmp file", success[0])
+		assert.Equal(t, 0, len(tl.Unsuccessful))
+		assert.Equal(t, 1, len(tl.Successful))
+		assert.Equal(t, "create tmp file", tl.Successful[0])
 	})
 
 	t.Run("test create_file, path exists", func(t *testing.T) {
@@ -51,11 +51,11 @@ func TestValidateAndRunTasks(t *testing.T) {
 		}
 		var tl TasksList
 		tl.Tasks = append(tl.Tasks, task)
-		success, unsuccess, err := tl.validateAndRunTasks()
+		err := tl.validateAndRunTasks()
 		assert.NoError(t, err)
-		assert.Equal(t, 1, len(unsuccess))
-		assert.Equal(t, 0, len(success))
-		assert.Equal(t, "create tmp file", unsuccess[0])
+		assert.Equal(t, 1, len(tl.Unchanged))
+		assert.Equal(t, 0, len(tl.Unsuccessful))
+		assert.Equal(t, 0, len(tl.Successful))
 	})
 
 	t.Run("test put_content with content", func(t *testing.T) {
@@ -69,11 +69,12 @@ func TestValidateAndRunTasks(t *testing.T) {
 
 		var tl TasksList
 		tl.Tasks = append(tl.Tasks, task)
-		success, unsuccess, err := tl.validateAndRunTasks()
+		err := tl.validateAndRunTasks()
 		contents, err := os.ReadFile(f.Name())
 		assert.NoError(t, err)
-		assert.Equal(t, 1, len(success))
-		assert.Equal(t, 0, len(unsuccess))
+		assert.Equal(t, 1, len(tl.Successful))
+		assert.Equal(t, 0, len(tl.Unsuccessful))
+		assert.Equal(t, 0, len(tl.Unchanged))
 		assert.Equal(t, "testing", string(contents))
 	})
 
@@ -90,11 +91,11 @@ func TestValidateAndRunTasks(t *testing.T) {
 		assert.NoError(t, err)
 		var tl TasksList
 		tl.Tasks = append(tl.Tasks, task)
-		success, unsuccess, err := tl.validateAndRunTasks()
+		err = tl.validateAndRunTasks()
 		contents, err := os.ReadFile(f.Name())
 		assert.NoError(t, err)
-		assert.Equal(t, 1, len(success))
-		assert.Equal(t, 0, len(unsuccess))
+		assert.Equal(t, 1, len(tl.Successful))
+		assert.Equal(t, 0, len(tl.Unsuccessful))
 		assert.Equal(t, "initial msg testing", string(contents))
 	})
 	t.Run("test put_content with content and append set to false", func(t *testing.T) {
@@ -110,11 +111,11 @@ func TestValidateAndRunTasks(t *testing.T) {
 		assert.NoError(t, err)
 		var tl TasksList
 		tl.Tasks = append(tl.Tasks, task)
-		success, unsuccess, err := tl.validateAndRunTasks()
+		err = tl.validateAndRunTasks()
 		contents, err := os.ReadFile(f.Name())
 		assert.NoError(t, err)
-		assert.Equal(t, 1, len(success))
-		assert.Equal(t, 0, len(unsuccess))
+		assert.Equal(t, 1, len(tl.Successful))
+		assert.Equal(t, 0, len(tl.Unsuccessful))
 		assert.Equal(t, "testing", string(contents))
 	})
 
@@ -128,10 +129,10 @@ func TestValidateAndRunTasks(t *testing.T) {
 		}
 		var tl TasksList
 		tl.Tasks = append(tl.Tasks, task)
-		success, unsuccess, err := tl.validateAndRunTasks()
+		err := tl.validateAndRunTasks()
 		assert.NoError(t, err)
-		assert.Equal(t, 1, len(success))
-		assert.Equal(t, 0, len(unsuccess))
+		assert.Equal(t, 1, len(tl.Successful))
+		assert.Equal(t, 0, len(tl.Unsuccessful))
 	})
 
 }
@@ -164,10 +165,11 @@ func TestValidateAndRunMultipleTasks(t *testing.T) {
 				Args:        map[string]string{"path": tempDir, "recursive": "true"},
 			},
 		}}
-		success, unsuccess, err := tl.validateAndRunTasks()
+		err := tl.validateAndRunTasks()
 		assert.NoError(t, err)
-		assert.Equal(t, 2, len(success))
-		assert.Equal(t, 2, len(unsuccess))
+		assert.Equal(t, 2, len(tl.Successful))
+		assert.Equal(t, 2, len(tl.Unchanged))
+		assert.Equal(t, 0, len(tl.Unsuccessful))
 	})
 
 }

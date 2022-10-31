@@ -28,6 +28,10 @@ func (mt *mockTask) HandleAbortOnFail(err error) bool {
 	return false
 }
 
+func (mt *mockTask) IsExecutionRequired() bool {
+	return false
+}
+
 func TestRunValidateFns(t *testing.T) {
 	t.Run("valid task type", func(t *testing.T) {
 		var mt mockTask

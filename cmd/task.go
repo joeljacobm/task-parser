@@ -112,17 +112,13 @@ func (t *Task) ValidateArguments() error {
 		}
 		_, err := os.Stat(path)
 		switch t.TaskType {
-		case "create_dir", "create_file":
-			if err == nil {
-				return errors.New("path already exists")
-			}
 		case "put_content":
 			if os.IsNotExist(err) {
 				return errors.New("path doesn't exist")
 			}
 		case "rm_dir":
 			if os.IsNotExist(err) {
-				return errors.New("path doesn't exist")
+				return nil
 			}
 			entry, err := os.ReadDir(path)
 			if err != nil {
@@ -134,13 +130,27 @@ func (t *Task) ValidateArguments() error {
 					return errors.New("Directory contains entries, recursive delete is required")
 				}
 			}
-		case "rm_file":
-			if os.IsNotExist(err) {
-				return errors.New("path doesn't exist")
-			}
 		}
 	}
 	return nil
+}
+
+// IsExecutionRequired checks if task execution is required.
+// For eg: if a directory exists we don't need to create it again.
+func (t *Task) IsExecutionRequired() bool {
+	path, _ := t.getArgument("path")
+	_, err := os.Stat(path)
+	switch t.TaskType {
+	case "create_dir", "create_file":
+		if err == nil {
+			return false
+		}
+	case "rm_dir", "rm_file":
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
 }
 
 func (t *Task) HandleAbortOnFail(err error) bool {

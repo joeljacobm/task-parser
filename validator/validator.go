@@ -5,6 +5,7 @@ package validator
 type validatableObject interface {
 	ValidateTaskType() error
 	ValidateArguments() error
+	IsExecutionRequired() bool
 	HandleAbortOnFail(err error) bool
 }
 
