@@ -116,6 +116,10 @@ func (t *Task) ValidateArguments() error {
 			if err == nil {
 				return errors.New("path already exists")
 			}
+		case "put_content":
+			if os.IsNotExist(err) {
+				return errors.New("path doesn't exist")
+			}
 		case "rm_dir":
 			if os.IsNotExist(err) {
 				return errors.New("path doesn't exist")

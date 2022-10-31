@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"io"
+	"log"
 	"os"
 	"strings"
 	"task-parser/validator"
@@ -50,11 +51,8 @@ func (tl *TasksList) validateAndRunTasks() ([]string, []string, error) {
 		val := validator.GetNewValidator(&t, t.getValidatorFns())
 		err := val.RunValidateFns()
 		if err != nil {
-			if val.Object.HandleAbortOnFail(err) {
-				unsuccessfulTasks = append(unsuccessfulTasks, t.Name)
-				return successfulTasks, unsuccessfulTasks, fmt.Errorf("Aborted due to Task: %s with error:%s", t.Name, err)
-			}
 			unsuccessfulTasks = append(unsuccessfulTasks, t.Name)
+			log.Println(fmt.Errorf("Task: %s error:%s", t.Name, err))
 			continue
 		}
 		err = t.performTask()

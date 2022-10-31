@@ -2,4 +2,4 @@
   type: create_dir
   abortOnFail: true
   args:
-  path: /tmp/project
+    path: /tmp/project
